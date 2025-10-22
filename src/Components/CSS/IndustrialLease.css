@@ -1,0 +1,60 @@
+.lease-industrial-form {
+  max-width: 980px;
+  margin: 28px auto;
+  padding: 30px;
+  background: #fcfcff;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  box-shadow: 0 7px 24px rgba(0, 0, 0, 0.07);
+  font-family: "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+.lease-industrial-form .form-header {
+  font-size: 24px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 22px;
+  color: #1a237e;
+}
+
+.lease-industrial-form .section-wrapper {
+  margin-bottom: 24px;
+  padding: 20px;
+  border-left: 4px solid #1a237e;
+  background-color: #f6f8ff;
+  border-radius: 8px;
+}
+
+.lease-industrial-form .section-wrapper h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a237e;
+  margin-bottom: 12px;
+}
+
+.lease-industrial-form .submit-btn {
+  width: 100%;
+  margin-top: 22px;
+  background-color: #1a237e;
+  color: white;
+  padding: 14px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.25s ease;
+}
+
+.lease-industrial-form .submit-btn:hover {
+  background-color: #0d1752;
+}
+
+@media (max-width: 700px) {
+  .lease-industrial-form {
+    padding: 20px;
+  }
+  .lease-industrial-form .section-wrapper {
+    padding: 14px;
+  }
+}

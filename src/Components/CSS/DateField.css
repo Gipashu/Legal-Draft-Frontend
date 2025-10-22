@@ -1,0 +1,25 @@
+.field-container {
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.field-label {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #333;
+}
+
+.field-input {
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-size: 14px;
+  transition: border-color 0.2s;
+}
+
+.field-input:focus {
+  border-color: #4f46e5;
+  outline: none;
+}

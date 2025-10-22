@@ -1,0 +1,64 @@
+.lease-form {
+  max-width: 1000px;
+  margin: 24px auto;
+  padding: 26px;
+  background-color: #fff;
+  border-radius: 10px;
+  border: 1px solid #eee;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.04);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+.form-header {
+  font-size: 22px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 18px;
+  color: #222;
+}
+
+/* layout helpers */
+.inline-row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.boundaries {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.submit-btn {
+  width: 100%;
+  margin-top: 18px;
+  background-color: #2f5cff;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.submit-btn:hover {
+  background-color: #264fdb;
+}
+
+/* small responsiveness */
+@media (max-width: 700px) {
+  .two-col, .inline-row, .boundaries {
+    grid-template-columns: 1fr;
+    display: block;
+  }
+}
