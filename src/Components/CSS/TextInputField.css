@@ -4,22 +4,45 @@
   flex-direction: column;
 }
 
-.field-label {
-  font-size: 14px;
+.field-container label {
+  font-size: 15px;
   font-weight: 600;
-  margin-bottom: 6px;
-  color: #333;
+  margin-bottom: 8px;
+  color: #cbd5e1; 
+  letter-spacing: 0.3px;
 }
 
-.field-input {
-  border: 1px solid #ccc;
+/* Style for agreement date labels */
+.field-container label[for*="agreement"] {
+  color: #93c5fd; 
+}
+
+/* Style for text input fields */
+.field-container input[type="text"],
+.field-container input[type="email"],
+.field-container input[type="tel"],
+.field-container input[type="date"],
+.field-container input[type="password"],
+.field-container textarea {
+  background-color: #1e1e2d; 
+  border: 1px solid #2d3748; 
   border-radius: 6px;
-  padding: 8px 10px;
+  padding: 10px 12px;
   font-size: 14px;
-  transition: border-color 0.2s;
+  color: #f8fafc;
+  transition: all 0.2s ease-in-out;
+  width: 100%;
 }
 
 .field-input:focus {
   border-color: #4f46e5;
   outline: none;
+  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.3);
+  background-color: #2d3748; 
+}
+.error-text {
+  color: #ffffff; 
+  font-size: 12px;
+  margin-top: 4px;
+  font-weight: 500;
 }

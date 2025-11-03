@@ -4,22 +4,40 @@
   flex-direction: column;
 }
 
-.field-label {
-  font-size: 14px;
+.field-container label {
+  font-size: 15px;
   font-weight: 600;
-  margin-bottom: 6px;
-  color: #333;
+  margin-bottom: 8px;
+  color: #cbd5e1; /* Light gray-blue for labels */
+  letter-spacing: 0.3px;
 }
 
-.field-input {
-  border: 1px solid #ccc;
+/* Style for number input fields */
+.field-container input[type="number"] {
+  background-color: #f8f8f8; /* Dark background for input */
+  border: 1px solid #334155; /* Slightly lighter border */
   border-radius: 6px;
-  padding: 8px 10px;
+  padding: 10px 12px;
   font-size: 14px;
-  transition: border-color 0.2s;
+  color: #f8fafc; /* Light text color */
+  transition: all 0.2s ease-in-out;
+  width: 100%;
 }
 
 .field-input:focus {
   border-color: #4f46e5;
   outline: none;
+}
+
+/* Error message styling */
+.error-text {
+  color: #ffffff !important; 
+  font-size: 12px;
+  margin-top: 4px;
+  font-weight: 500;
+}
+
+/* Input error state */
+.input-error {
+  border-color: #ef4444 !important; 
 }
