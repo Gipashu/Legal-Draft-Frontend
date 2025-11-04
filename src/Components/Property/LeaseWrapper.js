@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import {leases} from "./Property";
+import {leases} from "./Property1";
 
 const LeaseWrapper = () => {
   const { type } = useParams();

@@ -86,9 +86,9 @@ const Navbar = () => {
       initial={{ y: 0 }}
       animate={{ y: show ? 0 : "-100%" }}
       transition={{ duration: 0.3, ease: "easeInOut" }}
-      className="fixed top-0 left-0 right-0 z-50 p-4"
+      className="fixed top-0 left-0 right-0 z-50 p-2 sm:p-3 md:p-4"
     >
-      <div className="relative w-full max-w-7xl mx-auto bg-black/30 backdrop-blur-xl border border-blue-400/20 rounded-2xl px-3 sm:px-4 md:px-6 lg:px-8 shadow-2xl shadow-black/20">
+      <div className="relative w-full max-w-7xl mx-auto bg-black/80 backdrop-blur-xl border border-blue-400/20 rounded-xl sm:rounded-2xl px-2 sm:px-4 md:px-6 lg:px-8 shadow-2xl shadow-black/20">
         {/* Top-left border accent */}
         <div className="absolute top-0 left-0 w-12 h-12 md:w-16 md:h-16 border-l-2 border-t-2 border-blue-400/60 rounded-tl-2xl opacity-50 transition-all duration-300"></div>
         {/* Bottom-right border accent */}
@@ -109,13 +109,13 @@ const Navbar = () => {
           </motion.div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-1 lg:space-x-2">
+          <div className="hidden md:flex items-center space-x-1 lg:space-x-3 xl:space-x-4">
             {navItems.map((item) => (
               <div key={item.name} className="relative">
                 {item.name === "Home" || item.label === "" ? (
                   <motion.button
                     onClick={() => handleScrollTo(item)}
-                    className="relative px-2 sm:px-3 md:px-4 py-1 sm:py-2 text-xs sm:text-sm font-medium transition-all duration-300 text-gray-300 hover:text-white group"
+                    className="relative px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium transition-all duration-300 text-gray-300 hover:text-white group"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                   >

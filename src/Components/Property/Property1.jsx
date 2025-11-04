@@ -7,6 +7,7 @@ import FlatLease from "./LeaseForms/FlatLease";
 import CommercialLeaseForm from "./LeaseForms/CommercialLeaseForm";
 import LandLease from "./LeaseForms/LandLease";
 import IndustrialLease from "./LeaseForms/IndustrialLease";
+import LeasedeedCommercialForm from "./LeaseForms/LeaseDeed/LeasedeedForm";
 
 export const leases = [
   {
@@ -49,13 +50,23 @@ export const leases = [
   },
   {
     title: "Industrial Lease",
-    desc: "For warehouses, manufacturing units, and industrial property complexes.",
-    gradient: "from-pink-500 to-red-500",
+    desc: "Designed for manufacturing units, warehouses, and industrial spaces with specific operational requirements.",
+    gradient: "from-orange-500 to-red-500",
     type: "industrial",
     img: require("../../Images/Property/IndustrialAgreement.png"),
     component: IndustrialLease,
     icon: Factory,
   },
+  {
+    title: "Lease Deed (Commercial)",
+    desc: "Comprehensive lease deed for commercial properties with detailed terms and conditions.",
+    gradient: "from-indigo-500 to-purple-500",
+    type: "deed",
+    img: require("../../Images/Property/CommercialAgreement.png"),
+    component: LeasedeedCommercialForm,
+    icon: FileText,
+    popular: true,
+    }
 ];
 
 const Property = () => {

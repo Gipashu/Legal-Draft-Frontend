@@ -11,6 +11,8 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #ffffff; /* Set a clean white background */
+  color: #1a1a1a; /* Set default text color */
 }
 
 code {
@@ -21,28 +23,24 @@ code {
 html, body, #root {
   height: 100%;
   width: 100%;
+  overflow-x: hidden;
 }
-/* Add these styles to your global CSS */
+
 html {
   scroll-behavior: smooth;
-  overflow-x: hidden;
 }
 
-body {
-  overflow-x: hidden;
-  perspective: 1000px;
-}
-
-/* Optional: Add a subtle gradient overlay for better depth perception */
+/* Add a subtle background pattern instead of the dark overlay */
 body::before {
   content: '';
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  height: 100vh;
-  background: radial-gradient(ellipse at center, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.8) 100%);
+  bottom: 0;
+  background-image: radial-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+  background-size: 20px 20px;
+  opacity: 0.5;
+  z-index: -1;
   pointer-events: none;
-  z-index: 10;
-  mix-blend-mode: overlay;
 }
