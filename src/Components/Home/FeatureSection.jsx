@@ -1,5 +1,5 @@
 import React from "react";
-import { HoverEffect } from "./card-hover-effect";
+import { HoverEffect } from "./CardHoverEffect";
 
 const FeatureSection = () => {
   const categories = [

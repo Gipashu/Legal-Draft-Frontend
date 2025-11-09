@@ -1,16 +1,31 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useDispatch, useSelector } from "react-redux";
 import { Copy,Info,CheckCircle,AlertTriangle,FileCheck,Zap} from "lucide-react";
 import NumberField from "../../../FormComponents/NumberField";
 import TextAreaField from "../../../FormComponents/TextAreaField";
 import CheckboxField from "../../../FormComponents/CheckboxField";
 import SelectField from "../../../FormComponents/SelectField";
+import {
+  selectFormData,
+  updateField,
+  updateFormBulk
+} from "../../../../redux/PropertySlices/leaseSlice";
 
 /**
  * Dynamic Counterparts Clause Component
  * Handles clause 30 with customization options
  */
-const DynamicCounterpartsSection = ({ formData, setFormData, handleChange }) => {
+const DynamicCounterpartsSection = () => {
+  const dispatch = useDispatch();
+  const formType = "deed";
+  const formData = useSelector((state) => selectFormData(formType)(state));
+  
+  const handleChange = (field) => (e) => {
+    const value = e.target?.value !== undefined ? e.target.value : e;
+    dispatch(updateField({ formType, field, value }));
+  };
+
   // Helper to show/hide conditional fields
   const showNumberOfCopies = formData.counterpartsClauseType === "specific_number";
   const showDigitalSignature = formData.enableDigitalSignature;
@@ -23,10 +38,12 @@ const DynamicCounterpartsSection = ({ formData, setFormData, handleChange }) => 
   useEffect(() => {
     const clause30 = generateClause30Preview();
     
-    setFormData(prev => ({
-      ...prev,
-      counterpartsClause30: clause30,
-      clause30: clause30
+    dispatch(updateFormBulk({ 
+      formType,
+      data: {
+        counterpartsClause30: clause30,
+        clause30: clause30
+      }
     }));
   }, [
     formData.counterpartsClauseType,

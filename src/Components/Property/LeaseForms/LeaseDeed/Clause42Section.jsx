@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useDispatch, useSelector } from "react-redux";
 import { 
   AlertCircle, 
   Info,
@@ -10,10 +11,26 @@ import SelectField from "../../../FormComponents/SelectField";
 import NumberField from "../../../FormComponents/NumberField";
 import TextAreaField from "../../../FormComponents/TextAreaField";
 import CheckboxField from "../../../FormComponents/CheckboxField";
+import {
+  selectFormData,
+  updateField,
+  updateFormBulk
+} from "../../../../redux/PropertySlices/leaseSlice";
 
 
-const DynamicDefaultClauseSection = ({ formData, setFormData, handleChange }) => {
-  // Helper function to show/hide conditional fields
+const DynamicDefaultClauseSection = () => {
+  const dispatch = useDispatch();
+  const formType = "deed";
+  
+ 
+  const formData = useSelector((state) => selectFormData(formType)(state));
+  
+ 
+  const handleChange = (field) => (e) => {
+    const value = e.target?.value !== undefined ? e.target.value : e;
+    dispatch(updateField({ formType, field, value }));
+  };
+  
   const showLateFeeFields = formData.defaultPenaltyType === "late_fee_penalty" || 
                             formData.defaultPenaltyType === "multiple_penalties";
   
@@ -29,10 +46,9 @@ const DynamicDefaultClauseSection = ({ formData, setFormData, handleChange }) =>
     const clause43 = generateClause43Preview();
     const clause44 = formData.enableRemedyPeriod ? generateClause44Preview() : '';
     
-    setFormData(prev => ({
-      ...prev,
-      clause43,
-      clause44
+    dispatch(updateFormBulk({ 
+      formType, 
+      data: { clause43, clause44 }
     }));
   }, [
     formData.defaultConsecutiveMonths,
@@ -45,7 +61,9 @@ const DynamicDefaultClauseSection = ({ formData, setFormData, handleChange }) =>
     formData.enableRemedyPeriod,
     formData.noticePeriodDays,
     formData.remedyPeriodAction,
-    formData.customRemedyClause
+    formData.customRemedyClause,
+    dispatch,
+    formType
   ]);
 
 

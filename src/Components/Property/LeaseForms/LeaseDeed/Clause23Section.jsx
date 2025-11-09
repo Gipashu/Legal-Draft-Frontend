@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useDispatch, useSelector } from "react-redux";
 import { 
   FileText,
   Info,
@@ -12,25 +13,34 @@ import NumberField from "../../../FormComponents/NumberField";
 import TextAreaField from "../../../FormComponents/TextAreaField";
 import CheckboxField from "../../../FormComponents/CheckboxField";
 import SelectField from "../../../FormComponents/SelectField";
+import {
+  selectFormData,
+  updateField,
+  updateFormBulk
+} from "../../../../redux/PropertySlices/leaseSlice";
 
 
-const DynamicAssignmentByLessorSection = ({ formData, setFormData, handleChange }) => {
-  // Helper to show/hide conditional fields
+const DynamicAssignmentByLessorSection = () => {
+  const dispatch = useDispatch();
+  const formType = "deed";
+  const formData = useSelector((state) => selectFormData(formType)(state));
+  
+  const handleChange = (field) => (e) => {
+    const value = e.target?.value !== undefined ? e.target.value : e;
+    dispatch(updateField({ formType, field, value }));
+  };
+  
   const showLesseeConsent = formData.assignmentClauseType === "lessee_consent";
   const showNotification = formData.assignmentClauseType === "with_notification";
   const showRestrictions = formData.enableAssignmentRestrictions;
   const showCustomClause = formData.assignmentClauseType === "custom";
   const showAssigneeObligation = formData.enableAssigneeObligation;
 
-  // Update form data with generated clauses whenever they change
+  
   useEffect(() => {
     const clause23 = generateClause23Preview();
     
-    setFormData(prev => ({
-      ...prev,
-      assignmentClause23: clause23,
-      clause23: clause23
-    }));
+    dispatch(updateFormBulk({ formType, data: { assignmentClause23: clause23, clause23 } }));
   }, [
     formData.assignmentClauseType,
     formData.lesseeLossOfRights,
@@ -44,7 +54,7 @@ const DynamicAssignmentByLessorSection = ({ formData, setFormData, handleChange 
     formData.postAssignmentLessorLiability
   ]);
 
-  // Generate preview of clause 23
+
   const generateClause23Preview = () => {
     let baseText = "";
     
@@ -56,7 +66,7 @@ const DynamicAssignmentByLessorSection = ({ formData, setFormData, handleChange 
       case "lessee_consent":
         baseText += "Any sale, assignment, conveyance, or transfer of the Lessor's interest in the Leased Premises or his rights and obligations under this Lease Deed shall require the prior written consent of the Lessee, which shall not be unreasonably withheld or delayed.";
         
-        // Add loss of rights if enabled
+       
         if (formData.lesseeLossOfRights) {
           baseText += " However, if the Lessee unreasonably refuses consent, the Lessor may proceed with the assignment, and the Lessee shall retain all rights under this Lease Deed.";
         }
@@ -81,7 +91,7 @@ const DynamicAssignmentByLessorSection = ({ formData, setFormData, handleChange 
         baseText += "[Select assignment type]";
     }
 
-    // Add restrictions if enabled
+
     if (formData.enableAssignmentRestrictions && formData.assignmentClauseType !== "limited_assignment") {
       let restrictionText = "";
       
@@ -110,7 +120,7 @@ const DynamicAssignmentByLessorSection = ({ formData, setFormData, handleChange 
       baseText += restrictionText;
     }
 
-    // Add assignee obligations if enabled
+  
     if (formData.enableAssigneeObligation) {
       const obligations = formData.assigneeObligations || [];
       if (obligations.length > 0) {
@@ -118,7 +128,7 @@ const DynamicAssignmentByLessorSection = ({ formData, setFormData, handleChange 
       }
     }
 
-    // Add post-assignment lessor liability
+    
     if (formData.postAssignmentLessorLiability) {
       switch (formData.postAssignmentLessorLiability) {
         case "no_liability":

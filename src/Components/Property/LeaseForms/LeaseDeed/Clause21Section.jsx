@@ -1,33 +1,47 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useDispatch, useSelector } from "react-redux";
 import { XCircle,Info,CheckCircle,AlertTriangle,Ban} from "lucide-react";
 import NumberField from "../../../FormComponents/NumberField";
 import TextAreaField from "../../../FormComponents/TextAreaField";
 import CheckboxField from "../../../FormComponents/CheckboxField";
 import SelectField from "../../../FormComponents/SelectField";
+import {
+  selectFormData,
+  updateField,
+  updateFormBulk
+} from "../../../../redux/PropertySlices/leaseSlice";
 
-/**
- * Dynamic Termination Clause Section Component
- * Handles clause 20.1 and 20.2 with customization options
- */
-const DynamicTerminationSection = ({ formData, setFormData, handleChange }) => {
-  // Helper to show/hide conditional fields
+
+const DynamicTerminationSection = () => {
+  const dispatch = useDispatch();
+  const formType = "deed";
+  const formData = useSelector((state) => selectFormData(formType)(state));
+  
+  const handleChange = (field) => (e) => {
+    const value = e.target?.value !== undefined ? e.target.value : e;
+    dispatch(updateField({ formType, field, value }));
+  };
+
+  
   const showRemedyPeriod = formData.terminationClauseType !== "immediate";
   const showCustomClause = formData.terminationClauseType === "custom";
   const showConsequences = formData.enableTerminationConsequences;
   const showEarlyTermination = formData.enableEarlyTermination;
 
-  // Update form data with generated clauses whenever they change
+  
   useEffect(() => {
     const clause201 = generateClause201Preview();
     const clause202 = generateClause202Preview();
     
-    setFormData(prev => ({
-      ...prev,
-      terminationClause201: clause201,
-      terminationClause202: clause202,
-      clause201: clause201,
-      clause202: clause202
+    dispatch(updateFormBulk({ 
+      formType,
+      data: {
+        terminationClause201: clause201,
+        terminationClause202: clause202,
+        clause201: clause201,
+        clause202: clause202
+      }
     }));
   }, [
     formData.terminationNoticeDays,
@@ -37,10 +51,12 @@ const DynamicTerminationSection = ({ formData, setFormData, handleChange }) => {
     formData.terminationConsequences,
     formData.enableEarlyTermination,
     formData.earlyTerminationPenalty,
-    formData.earlyTerminationNotice
+    formData.earlyTerminationNotice,
+    dispatch,
+    formType
   ]);
 
-  // Generate preview of clause 20.1
+
   const generateClause201Preview = () => {
     const days = formData.terminationNoticeDays || "___";
     
@@ -71,19 +87,19 @@ const DynamicTerminationSection = ({ formData, setFormData, handleChange }) => {
     }
   };
 
-  // Generate preview of clause 20.2
+  
   const generateClause202Preview = () => {
     let baseText = "Upon any termination of the Lease for any reason, the Lessee shall return physical vacant possession of the scheduled property to the Lessor";
     
-    // Add possession timeline if specified
+   
     if (formData.possessionReturnDays) {
       baseText += ` within ${formData.possessionReturnDays} days of termination notice`;
     }
     
-    // Security deposit handling
+    
     baseText += ", concurrently with the Lessor refunding the Security Deposit to the Lessee after deducting all amounts due and payable by the Lessee under this Lease Deed";
     
-    // Add consequences if enabled
+    
     if (formData.enableTerminationConsequences) {
       const consequences = formData.terminationConsequences || [];
       if (consequences.length > 0) {
@@ -93,7 +109,7 @@ const DynamicTerminationSection = ({ formData, setFormData, handleChange }) => {
     
     baseText += ".";
     
-    // Add early termination clause if enabled
+    
     if (formData.enableEarlyTermination) {
       const earlyTermText = generateEarlyTerminationText();
       baseText += ` ${earlyTermText}`;
@@ -102,7 +118,7 @@ const DynamicTerminationSection = ({ formData, setFormData, handleChange }) => {
     return baseText;
   };
 
-  // Generate early termination text
+  
   const generateEarlyTerminationText = () => {
     if (!formData.enableEarlyTermination) return "";
     
@@ -140,7 +156,6 @@ const DynamicTerminationSection = ({ formData, setFormData, handleChange }) => {
         </div>
       </div>
 
-      {/* Info Banner */}
       <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-lg flex items-start gap-3">
         <Info className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
         <div className="text-sm text-red-200">
@@ -149,7 +164,7 @@ const DynamicTerminationSection = ({ formData, setFormData, handleChange }) => {
         </div>
       </div>
 
-      {/* Section 1: Termination by Lessor (Clause 20.1) */}
+      
       <div className="space-y-4 mb-6 p-5 bg-slate-800/50 rounded-xl border border-slate-700">
         <h3 className="text-lg font-semibold text-white flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-gradient-to-r from-red-500 to-rose-500"></span>
@@ -191,7 +206,7 @@ const DynamicTerminationSection = ({ formData, setFormData, handleChange }) => {
           helperText="Define how lessor can terminate lease upon default"
         />
 
-        {/* Conditional Fields Based on Termination Type */}
+        
         <AnimatePresence>
           {showRemedyPeriod && (
             <motion.div
@@ -262,7 +277,7 @@ const DynamicTerminationSection = ({ formData, setFormData, handleChange }) => {
         </AnimatePresence>
       </div>
 
-      {/* Section 2: Possession & Security Deposit (Clause 20.2) */}
+      
       <div className="space-y-4 mb-6 p-5 bg-slate-800/50 rounded-xl border border-slate-700">
         <h3 className="text-lg font-semibold text-white flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-gradient-to-r from-amber-500 to-orange-500"></span>
@@ -279,7 +294,7 @@ const DynamicTerminationSection = ({ formData, setFormData, handleChange }) => {
           helperText="Leave blank for immediate possession. Specify days if grace period needed."
         />
 
-        {/* Termination Consequences */}
+        
         <div className="flex items-center justify-between p-3 bg-slate-700/30 rounded-lg">
           <div>
             <label className="text-white text-sm font-medium">Add Termination Consequences?</label>
@@ -338,7 +353,7 @@ const DynamicTerminationSection = ({ formData, setFormData, handleChange }) => {
         </AnimatePresence>
       </div>
 
-      {/* Section 3: Early Termination Provisions */}
+      
       <div className="space-y-4 mb-6 p-5 bg-slate-800/50 rounded-xl border border-slate-700">
         <div className="flex items-start justify-between">
           <div>
@@ -447,7 +462,7 @@ const DynamicTerminationSection = ({ formData, setFormData, handleChange }) => {
         </AnimatePresence>
       </div>
 
-      {/* Live Preview Section */}
+      
       <div className="mt-6 p-5 bg-slate-950/50 border border-slate-700 rounded-xl">
         <div className="flex items-center gap-2 mb-4">
           <CheckCircle className="w-5 h-5 text-green-400" />
@@ -455,7 +470,7 @@ const DynamicTerminationSection = ({ formData, setFormData, handleChange }) => {
         </div>
         
         <div className="space-y-4">
-          {/* Clause 20.1 Preview */}
+          
           <div className="p-4 bg-slate-800/50 rounded-lg border border-slate-600">
             <p className="text-xs text-slate-400 mb-2 font-mono">CLAUSE 20.1 - TERMINATION BY LESSOR</p>
             <p className="text-sm text-slate-200 leading-relaxed whitespace-pre-wrap">
@@ -463,7 +478,7 @@ const DynamicTerminationSection = ({ formData, setFormData, handleChange }) => {
             </p>
           </div>
 
-          {/* Clause 20.2 Preview */}
+          
           <div className="p-4 bg-slate-800/50 rounded-lg border border-slate-600">
             <p className="text-xs text-slate-400 mb-2 font-mono">CLAUSE 20.2 - POST-TERMINATION</p>
             <p className="text-sm text-slate-200 leading-relaxed whitespace-pre-wrap">
@@ -473,7 +488,7 @@ const DynamicTerminationSection = ({ formData, setFormData, handleChange }) => {
         </div>
       </div>
 
-      {/* Summary Info */}
+      
       <div className="mt-4 p-4 bg-blue-500/10 border border-blue-500/30 rounded-lg">
         <div className="flex items-start gap-3">
           <Info className="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" />
