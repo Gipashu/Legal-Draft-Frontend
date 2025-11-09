@@ -1,24 +1,35 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { FileText,Building2,Users,Calendar,DollarSign,MapPin,ClipboardList,Eye,Shield,Lock,Wrench,Scale,AlertCircle,Copy} from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
 import TextInputField from "../../../FormComponents/TextInputField";
 import NumberField from "../../../FormComponents/NumberField";
 import DateField from "../../../FormComponents/DateField";
 import TextAreaField from "../../../FormComponents/TextAreaField";
 import SelectField from "../../../FormComponents/SelectField";
 import LeasePreview from "../../../FormComponents/LeasePreview";
-import { useDispatch } from "react-redux";
-import { updateFormBulk } from "../../../../redux/PropertySlices/leaseSlice";
 import DynamicDefaultClauseSection from "./Clause42Section";
 import DynamicTerminationSection from "./Clause21Section";
 import DynamicSecurityDepositSection from "./Clause72Section";
 import DynamicAssignmentByLessorSection from "./Clause23Section";
 import DynamicRightToMortgageSection from "./Clause26Section";
 import DynamicCounterpartsSection from "./Clause30Section";
+import {
+  selectFormData,
+  selectFormState,
+  updateField,
+  updateFormBulk,
+  initializeForm,
+  submitLease
+} from "../../../../redux/PropertySlices/leaseSlice";
 
 
-const CommercialLeaseForm = ({ formType }) => {
-  const [formData, setFormData] = useState({
+const LeasedeedForm = () => {
+  const dispatch = useDispatch();
+  const formType = "deed";
+
+  // Default form data
+  const defaultFormData = {
     // Agreement Details
     agreementPlace: "",
     agreementDate: "",
@@ -51,7 +62,7 @@ const CommercialLeaseForm = ({ formType }) => {
     annualRentIncreasePercent: "5",
     rentIncreaseNoticeDays: "",
 
-    // NEW: Dynamic Default & Remedy Configuration (Clauses 4.3 & 4.4)
+    // Dynamic clauses
     clause43: "",
     clause44: "",
 
@@ -99,7 +110,6 @@ const CommercialLeaseForm = ({ formType }) => {
 
     // Clause 30
     counterpartClause30: "",
-    
 
     // Schedule I - Property Description
     buildingNo: "",
@@ -122,22 +132,32 @@ const CommercialLeaseForm = ({ formType }) => {
     witness1Address: "",
     witness2Name: "",
     witness2Address: "",
-  });
+  };
+
+  // Initialize form on mount
+  useEffect(() => {
+    dispatch(initializeForm({ formType, initialData: defaultFormData }));
+  }, [dispatch]);
+
+  // Get form data and state from Redux
+  const formData = useSelector((state) => selectFormData(formType)(state));
+  const { status } = useSelector((state) => selectFormState(formType)(state));
 
 
+  // Handle field changes with Redux
   const handleChange = (field) => (e) => {
-    setFormData({ ...formData, [field]: e.target.value });
+    const value = e.target?.value !== undefined ? e.target.value : e;
+    dispatch(updateField({ formType, field, value }));
   };
 
 
   const [previewMode, setPreviewMode] = useState(false);
-  const dispatch = useDispatch();
+
 
 
   const handlePreview = (e) => {
     e.preventDefault();
-    dispatch(updateFormBulk({ formType: formType, data: formData }));
-    setTimeout(() => setPreviewMode(true), 0);
+    setPreviewMode(true);
   };
 
 
@@ -450,11 +470,7 @@ const CommercialLeaseForm = ({ formType }) => {
                 />
               </div>
 
-              <DynamicDefaultClauseSection
-                formData={formData}
-                setFormData={setFormData}
-                handleChange={handleChange}
-              />
+              <DynamicDefaultClauseSection />
 
               <div className="p-4 bg-slate-800 rounded-lg border border-slate-700">
                 <h4 className="text-white font-semibold mb-3">Annual Rent Revision</h4>
@@ -544,11 +560,7 @@ const CommercialLeaseForm = ({ formType }) => {
                 required
                 helperText="Refundable, interest-free"
               />
-              <DynamicSecurityDepositSection 
-                formData={formData} 
-                setFormData={setFormData} 
-                handleChange={handleChange} 
-              />
+              <DynamicSecurityDepositSection />
             </div>
           </div>
 
@@ -673,11 +685,7 @@ const CommercialLeaseForm = ({ formType }) => {
                 required
                 helperText="Days to remedy breach after notice"
               />
-              <DynamicTerminationSection 
-                formData={formData} 
-                setFormData={setFormData} 
-                handleChange={handleChange} 
-              />
+              <DynamicTerminationSection />
             </div>
           </div>
 
@@ -711,11 +719,7 @@ const CommercialLeaseForm = ({ formType }) => {
                   required
                 />
               </div>
-              <DynamicAssignmentByLessorSection 
-                formData={formData} 
-                setFormData={setFormData} 
-                handleChange={handleChange} 
-              />
+              <DynamicAssignmentByLessorSection />
                
             </div>
           </div>
@@ -728,11 +732,7 @@ const CommercialLeaseForm = ({ formType }) => {
             </div>
             <div className="space-y-4">
               <div className="grid grid-cols-1 gap-4">
-                <DynamicRightToMortgageSection 
-                  formData={formData} 
-                  setFormData={setFormData} 
-                  handleChange={handleChange} 
-                />
+                <DynamicRightToMortgageSection />
                 <SelectField
                 label="Notice Language"
                 name="noticeLanguage"
@@ -758,11 +758,7 @@ const CommercialLeaseForm = ({ formType }) => {
             </div>
             <div className="space-y-4">
               <div className="grid grid-cols-1 gap-4">
-                <DynamicCounterpartsSection 
-                  formData={formData} 
-                  setFormData={setFormData}   
-                  handleChange={handleChange} 
-                />
+                <DynamicCounterpartsSection />
                 
               </div>
             </div>
@@ -981,4 +977,4 @@ const CommercialLeaseForm = ({ formType }) => {
 };
 
 
-export default CommercialLeaseForm;
+export default LeasedeedForm ;

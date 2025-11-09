@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useDispatch, useSelector } from "react-redux";
 import { 
   Building2,
   Info,
@@ -12,12 +13,26 @@ import NumberField from "../../../FormComponents/NumberField";
 import TextAreaField from "../../../FormComponents/TextAreaField";
 import CheckboxField from "../../../FormComponents/CheckboxField";
 import SelectField from "../../../FormComponents/SelectField";
+import {
+  selectFormData,
+  updateField,
+  updateFormBulk
+} from "../../../../redux/PropertySlices/leaseSlice";
 
 /**
  * Dynamic Right to Mortgage Clause Component
  * Handles clause 26 with customization options
  */
-const DynamicRightToMortgageSection = ({ formData, setFormData, handleChange }) => {
+const DynamicRightToMortgageSection = () => {
+  const dispatch = useDispatch();
+  const formType = "deed";
+  const formData = useSelector((state) => selectFormData(formType)(state));
+  
+  const handleChange = (field) => (e) => {
+    const value = e.target?.value !== undefined ? e.target.value : e;
+    dispatch(updateField({ formType, field, value }));
+  };
+
   // Helper to show/hide conditional fields
   const showLesseeLien = formData.mortgageClauseType === "lessee_notice";
   const showMortgageConsent = formData.mortgageClauseType === "mortgagor_consent";
@@ -30,11 +45,12 @@ const DynamicRightToMortgageSection = ({ formData, setFormData, handleChange }) 
   useEffect(() => {
     const clause26 = generateClause26Preview();
     
-    setFormData(prev => ({
-      ...prev,
-      mortgageClause26: clause26,
-      clause26: clause26
-
+    dispatch(updateFormBulk({ 
+      formType,
+      data: {
+        mortgageClause26: clause26,
+        clause26: clause26
+      }
     }));
   }, [
     formData.mortgageClauseType,
@@ -112,7 +128,7 @@ const DynamicRightToMortgageSection = ({ formData, setFormData, handleChange }) 
       baseText += protectionText;
     }
 
-    // Add priority rights if enabled
+    
     if (formData.enablePriorityRights) {
       let priorityText = "";
       

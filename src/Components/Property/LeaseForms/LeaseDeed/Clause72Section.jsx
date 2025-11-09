@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useDispatch, useSelector } from "react-redux";
 import { 
   Shield,
   Info,
@@ -11,10 +12,23 @@ import NumberField from "../../../FormComponents/NumberField";
 import TextAreaField from "../../../FormComponents/TextAreaField";
 import CheckboxField from "../../../FormComponents/CheckboxField";
 import SelectField from "../../../FormComponents/SelectField";
+import {
+  selectFormData,
+  updateField,
+  updateFormBulk
+} from "../../../../redux/PropertySlices/leaseSlice";
 
 
-const DynamicSecurityDepositSection = ({ formData, setFormData, handleChange }) => {
-  // Helper to show/hide conditional fields
+const DynamicSecurityDepositSection = () => {
+  const dispatch = useDispatch();
+  const formType = "deed";
+  const formData = useSelector((state) => selectFormData(formType)(state));
+  
+  const handleChange = (field) => (e) => {
+    const value = e.target?.value !== undefined ? e.target.value : e;
+    dispatch(updateField({ formType, field, value }));
+  };
+  
   const showSettlementFields = formData.enableSettlementPeriod;
   const showTransferClause = formData.enableTransferClause;
   const showCustomSettlement = formData.settlementClauseType === "custom";
@@ -25,12 +39,14 @@ const DynamicSecurityDepositSection = ({ formData, setFormData, handleChange }) 
     const clause72 = generateClause72Preview();
     const clause73 = formData.enableTransferClause ? generateClause73Preview() : '';
     
-    setFormData(prev => ({
-      ...prev,
-      securityDepositClause72: clause72,
-      securityDepositClause73: clause73,
-      clause72: clause72, 
-      clause73: clause73  
+    dispatch(updateFormBulk({ 
+      formType,
+      data: {
+        securityDepositClause72: clause72,
+        securityDepositClause73: clause73,
+        clause72: clause72, 
+        clause73: clause73  
+      }
     }));
   }, [
     formData.securityDepositRefundDays,
